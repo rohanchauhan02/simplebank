@@ -49,15 +49,11 @@ To run migration
 
 ## installation SQLC
 
-using homebrew
+Using homebrew
 1. brew install sqlc
-
 using docker
-
 1. docker pull kjconroy/sqlc
-
 To run sqlc
-
 2. docker run --rm -v $(pwd):/src -w /src kjconroy/sqlc generate
 
 
