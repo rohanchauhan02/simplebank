@@ -56,3 +56,20 @@ Phantom Read
 
 Serilization
 Anomoaly
+
+ 
+
+
+MOCK TESTING
+
+Inital commands``
+
+ 1. go install github.com/golang/mock/mockgen@v1.6.0
+ 2. ls -la ~/go/bin
+ 3. which mockgen
+ 4. vi ~/.zshrc
+    -> press i to insert mode
+    -> export PATH=$PATH:~/go/bin
+    -> :wq
+ 5. source ~/.zshrc
+ 6. which mockgen

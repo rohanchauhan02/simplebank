@@ -6,8 +6,14 @@ import (
 	"fmt"
 )
 
-// Store provides all the functions to execute db queries and transections
-type Store struct {
+// SQLStore provides all the functions to execute db queries and transections
+type Store interface{
+	Querier
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
+}
+
+// SQLStore provides all the functions to execute SQL queries and transections
+type SQLStore struct {
 	*Queries
 	//create a new db transections
 	db *sql.DB
@@ -15,15 +21,15 @@ type Store struct {
 
 // NewStore creates a new Store
 
-func NewStore(db *sql.DB) *Store {
-	return &Store{
+func NewStore(db *sql.DB) Store {
+	return &SQLStore{
 		db:      db,
 		Queries: New(db),
 	}
 }
 
 // execTx executes a function within a database transection
-func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 
 	tx, err := store.db.BeginTx(ctx, &sql.TxOptions{})
 
@@ -64,7 +70,7 @@ var txKey = struct{}{}
 //TransferTx performs a money transfer from one account to the other.
 // It creates a transfer record, add account entries, add update account's balance within a single database transection
 
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
+func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
